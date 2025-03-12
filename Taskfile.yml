@@ -2,11 +2,8 @@
 
 version: '3'
 
-vars:
-  GREETING: Hello, World!
-
 tasks:
-  default:
+  dev:server:
+    dir: ./go
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - go run main.go
