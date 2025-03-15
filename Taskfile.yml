@@ -3,6 +3,14 @@
 version: '3'
 
 tasks:
+  dev:
+    deps:
+      - dev:server
+      - dev:client
+  dev:client:
+    dir: ./js
+    cmds:
+      - pnpm run dev
   dev:server:
     dir: ./go
     cmds:
@@ -11,3 +19,7 @@ tasks:
     dir: ./go
     cmds:
       - go mod tidy
+  openapi-gen:client:
+    dir: ./js
+    cmds:
+      - pnpm run openapi-gen

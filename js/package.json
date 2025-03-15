@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "pnpm -C apps/next-app dev",
+    "openapi-gen": "pnpm -C apps/next-app openapi-gen"
+  },
   "keywords": [],
   "author": "s-union",
   "license": "ISC",

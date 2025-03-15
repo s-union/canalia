@@ -3,3 +3,6 @@ packages:
   - packages/*
 ignoredBuiltDependencies:
   - sharp
+
+catalog:
+  typescript: ^5
