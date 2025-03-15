@@ -8,18 +8,16 @@ tasks:
       - dev:server
       - dev:client
   dev:client:
-    dir: ./js
     cmds:
       - pnpm run dev
   dev:server:
-    dir: ./go
+    dir: ./go-api
     cmds:
       - go run main.go
   tidy:
-    dir: ./go
+    dir: ./go-api
     cmds:
       - go mod tidy
   openapi-gen:client:
-    dir: ./js
     cmds:
       - pnpm run openapi-gen

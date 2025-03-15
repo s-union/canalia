@@ -1,8 +1,7 @@
 packages:
   - apps/*
   - packages/*
-ignoredBuiltDependencies:
-  - sharp
-
 catalog:
   typescript: ^5
+onlyBuiltDependencies:
+  - '@biomejs/biome'
