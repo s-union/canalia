@@ -25,7 +25,11 @@
 			},
 			"correctness": {
 				"noUnusedVariables": "warn",
+				"noUnusedImports": "warn",
 				"useHookAtTopLevel": "error"
+			},
+			"nursery": {
+				"useSortedClasses": "warn"
 			}
 		}
 	},
