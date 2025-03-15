@@ -1,5 +1,6 @@
 {
-  "recommendations": [
-    "biomejs.biome"
-  ]
+	"recommendations": [
+		"biomejs.biome",
+		"golang.go"
+	]
 }
