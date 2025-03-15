@@ -21,3 +21,7 @@ tasks:
   openapi-gen:client:
     cmds:
       - pnpm run openapi-gen
+  openapi-gen:server:
+    dir: ./go-api
+    cmds:
+      - go tool oapi-codegen -package generated -generate types,server ../schema/openapi.yaml > generated/openapi.gen.go
