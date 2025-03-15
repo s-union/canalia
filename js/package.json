@@ -1,0 +1,11 @@
+{
+  "name": "canalia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "s-union",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.2"
+}
