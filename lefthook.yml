@@ -1,5 +1,9 @@
 pre-commit:
-  jobs:
-    - name: biome check
-      run: pnpm exec biome check
+  commands:
+    biome-check:
+      run: pnpm check
+      stage_fixed: true
+    go-check:
+      root: ./go-api
+      run: go fmt && go vet
       stage_fixed: true
