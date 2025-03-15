@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  title: canalia
+  version: 0.1.0
+  description: |
+    野田地区理大祭ウェブポータル
+paths:
+  /user:
+    get:
+      summary: ユーザー情報を取得する
+      description: ユーザー情報を取得する
+      operationId: getUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          description: メールアドレス

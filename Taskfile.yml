@@ -7,3 +7,7 @@ tasks:
     dir: ./go
     cmds:
       - go run main.go
+  tidy:
+    dir: ./go
+    cmds:
+      - go mod tidy
