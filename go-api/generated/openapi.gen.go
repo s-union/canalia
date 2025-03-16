@@ -7,6 +7,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const (
+	RoleScopes = "Role.Scopes"
+)
+
 // User defines model for User.
 type User struct {
 	// Email メールアドレス
@@ -31,6 +35,8 @@ type ServerInterfaceWrapper struct {
 // GetUser converts echo context to params.
 func (w *ServerInterfaceWrapper) GetUser(ctx echo.Context) error {
 	var err error
+
+	ctx.Set(RoleScopes, []string{"normal"})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetUser(ctx)

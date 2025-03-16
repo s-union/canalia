@@ -10,6 +10,9 @@ paths:
       summary: ユーザー情報を取得する
       description: ユーザー情報を取得する
       operationId: getUser
+      security:
+        - Role:
+            - normal
       responses:
         '200':
           description: OK
@@ -28,3 +31,8 @@ components:
         email:
           type: string
           description: メールアドレス
+  securitySchemes:
+    Role:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
