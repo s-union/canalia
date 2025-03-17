@@ -3,7 +3,31 @@
 version: '3'
 
 tasks:
+  dev:
+    cmds:
+      - task: dev:server
+      - task: dev:client
+  dev:client:
+    cmds:
+      - pnpm run dev
   dev:server:
-    dir: ./go
+    dir: ./go-api
     cmds:
       - go run main.go
+
+  tidy:
+    dir: ./go-api
+    cmds:
+      - go mod tidy
+
+  openapi-gen:
+    cmds:
+      - task: openapi-gen:client
+      - task: openapi-gen:server
+  openapi-gen:client:
+    cmds:
+      - pnpm run openapi-gen
+  openapi-gen:server:
+    dir: ./go-api
+    cmds:
+      - go tool oapi-codegen -package generated -generate types,server ../schema/openapi.yaml > generated/openapi.gen.go

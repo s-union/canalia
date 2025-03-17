@@ -1,0 +1,20 @@
+pre-commit:
+  commands:
+    openapi-gen:
+      glob: './schema/openapi.yaml'
+      run: task openapi-gen
+      stage_fixed: true
+    biome-check:
+      glob: '*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}'
+      run: pnpm biome check {staged_files} --write
+      stage_fixed: true
+    eslint-check-next:
+      root: './apps/next-app'
+      glob: '**/*.{js,ts,jsx,tsx}'
+      run: pnpm lint
+      stage_fixed: true
+    go-check:
+      root: ./go-api
+      glob: '**/*.go'
+      run: go fmt && go vet
+      stage_fixed: true
