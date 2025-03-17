@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/s-union/canalia/generated"
+	"github.com/s-union/canalia/handler"
 )
 
 func hello(c echo.Context) error {
@@ -11,7 +14,10 @@ func hello(c echo.Context) error {
 }
 
 func main() {
+	server := handler.NewServer()
+
 	e := echo.New()
-	e.GET("/", hello)
-	e.Start(":1323")
+	generated.RegisterHandlers(e, &server)
+
+	log.Fatal(e.Start(":8080"))
 }
