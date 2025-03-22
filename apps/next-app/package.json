@@ -10,7 +10,7 @@
 		"openapi-gen": "openapi-typescript ../../schema/openapi.yaml -o ./generated/schema.d.ts"
 	},
 	"dependencies": {
-		"next": "15.2.2",
+		"next": "15.2.3",
 		"openapi-fetch": "^0.13.5",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0"
