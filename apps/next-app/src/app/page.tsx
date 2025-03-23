@@ -1,9 +1,22 @@
-import { client } from '@/lib/fetch';
+import { auth0 } from '@/lib/auth0';
 
 export default async function Home() {
-	const { data, error } = await client.GET('/user');
-	if (error) {
-		return <h1>Error fetching user data</h1>;
+	const session = await auth0.getSession();
+
+	if (!session) {
+		return (
+			<main>
+				<a href="/auth/login?screen_hint=signup">Sign up</a>
+				<a href="/auth/login">Log in</a>
+			</main>
+		);
 	}
-	return <h1>Hello {data.name}!</h1>;
+
+	return (
+		<main>
+			<h1>Welcome, {session.user.name}!</h1>
+			<div>{session.tokenSet.accessToken}</div>
+			<a href="/auth/logout">Log out</a>
+		</main>
+	);
 }
