@@ -19,7 +19,10 @@ func FetchUserInfo(token string) (*UserInfo, error) {
 	domain := os.Getenv("AUTH0_DOMAIN")
 	url := "https://" + domain + "/userinfo"
 
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
 	req.Header.Set("Authorization", "Bearer "+token)
 
 	client := new(http.Client)
