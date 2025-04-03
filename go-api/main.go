@@ -15,13 +15,13 @@ import (
 )
 
 func Env() {
-	enviroment, ok := os.LookupEnv("GO_ENV")
+	environment, ok := os.LookupEnv("GO_ENV")
 	if !ok {
-		enviroment = "local"
+		environment = "local"
 	}
-	err := godotenv.Load(fmt.Sprintf(".env.%s", enviroment))
+	err := godotenv.Load(fmt.Sprintf(".env.%s", environment))
 	if err != nil {
-		log.Fatalf("Error loading .env.%s file", enviroment)
+		log.Fatalf("Error loading .env.%s file", environment)
 	}
 }
 
