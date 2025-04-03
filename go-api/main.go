@@ -7,6 +7,8 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
+
 	"github.com/s-union/canalia/generated"
 	"github.com/s-union/canalia/handler"
 	"github.com/s-union/canalia/middleware"
@@ -28,6 +30,7 @@ func main() {
 	server := handler.NewServer()
 
 	e := echo.New()
+	e.Use(echoMiddleware.Recover())
 	e.Use(middleware.JWTAuth)
 	generated.RegisterHandlers(e, &server)
 

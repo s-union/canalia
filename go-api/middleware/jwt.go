@@ -12,13 +12,19 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 
 	"github.com/labstack/echo/v4"
+
+	"github.com/s-union/canalia/utils/auth0"
 )
 
 // ContextKey はコンテキストに値を設定/取得するためのキーの型です。
 // 文字列リテラルよりも型安全性を高めるために使用します。
 type ContextKey string
 
-const ClaimsContextKey ContextKey = "claims"
+const (
+	ClaimsContextKey      ContextKey = "claims"
+	AccessTokenContextKey ContextKey = "user_access_token"
+	UserContextKey        ContextKey = "user"
+)
 
 type CustomClaims struct {
 	Scope string `json:"scope"`
@@ -52,8 +58,8 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil {
 			log.Fatalf("Error creating JWT validator: %v", err)
 		}
-		authHeader := c.Request().Header.Get("Authorization")
 
+		authHeader := c.Request().Header.Get("Authorization")
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
 			log.Println("Authorization header format must be Bearer {token}")
@@ -68,8 +74,14 @@ func JWTAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		claims := validToken.(*validator.ValidatedClaims)
 
-		// 検証済みのクレームをコンテキストに設定
+		c.Set(string(AccessTokenContextKey), token)
 		c.Set(string(ClaimsContextKey), claims)
+
+		userContext, err := auth0.FetchUserInfo(token)
+		if err != nil {
+			log.Printf("Error fetching user info: %v", err)
+		}
+		c.Set(string(UserContextKey), userContext)
 
 		return next(c)
 	}

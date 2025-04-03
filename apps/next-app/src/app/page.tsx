@@ -15,7 +15,8 @@ export default async function Home() {
 	return (
 		<main>
 			<h1>Welcome, {session.user.name}!</h1>
-			<div>{session.tokenSet.accessToken}</div>
+			<div>Access Token: {session.tokenSet.accessToken}</div>
+			<div>ID Token: {session.tokenSet.idToken}</div>
 			<a href="/auth/logout">Log out</a>
 		</main>
 	);
