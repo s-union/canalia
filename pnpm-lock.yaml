@@ -108,6 +108,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^3.1.1
         version: 3.1.1(@vitest/browser@3.1.1)(vitest@3.1.1)
+      chromatic:
+        specifier: ^11.28.0
+        version: 11.28.0
       eslint:
         specifier: ^9
         version: 9.22.0(jiti@2.4.2)
