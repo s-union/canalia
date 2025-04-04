@@ -1,4 +1,14 @@
 import type { Metadata } from 'next';
+import { Noto_Sans_JP } from 'next/font/google';
+
+import './globals.css';
+
+export const notoSansJP = Noto_Sans_JP({
+	variable: '--font-noto-sans-jp',
+	display: 'swap',
+	preload: false,
+	weight: ['400', '700'],
+});
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -12,7 +22,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ja">
-			<body>{children}</body>
+			<body className={`${notoSansJP.variable} font-sans`}>{children}</body>
 		</html>
 	);
 }
