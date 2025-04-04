@@ -1,0 +1,85 @@
+import { Meta, Story } from '@storybook/blocks';
+
+import * as Typography from './typography.stories';
+
+<Meta title="Typography" of={Typography} />
+
+# Typography
+
+それぞれのタグにデフォルトで適用されているスタイルの確認
+
+## 説明
+
+### font-family
+
+```css
+font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', Meiryo, sans-serif;
+```
+
+### font-feature-settings
+
+```css
+font-feature-settings: 'palt';
+```
+
+が指定されています。これにより、Noto Sans JP などのフォントで日本語のプロポーショナルフォントが適用されます。
+
+## h1
+
+<Story of={Typography.H1} name="H1" />
+
+```css
+h1 {
+  @apply text-3xl font-bold;
+}
+```
+
+## h2
+
+<Story of={Typography.H2} name="H2" />
+
+```css
+h2 {
+  @apply text-2xl font-bold;
+}
+```
+
+## h3
+
+<Story of={Typography.H3} name="H3" />
+
+```css
+h3 {
+  @apply text-xl;
+}
+```
+
+## h4
+
+<Story of={Typography.H4} name="H4" />
+
+```css
+h4 {
+  @apply text-lg;
+}
+```
+
+## p
+
+<Story of={Typography.P} name="P" />
+
+```css
+p {
+  @apply leading-8 [&:not(:first-child)]:mt-6;
+}
+```
+
+## blockquote
+
+<Story of={Typography.Blockquote} name="Blockquote" />
+
+```css
+blockquote {
+  @apply mt-6 border-l-2 pl-6 italic;
+}
+```
