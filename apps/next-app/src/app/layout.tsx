@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ja">
-			<body className={`${notoSansJP.variable} font-default`}>{children}</body>
+			<body className={`${notoSansJP.variable} font-sans`}>{children}</body>
 		</html>
 	);
 }

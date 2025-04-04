@@ -17,7 +17,7 @@ const preview: Preview = {
 	},
 	decorators: [
 		(Story) => (
-			<div className={`${notoSansJP.variable} font-default`}>
+			<div className={`${notoSansJP.variable}`}>
 				<Story />
 			</div>
 		),
