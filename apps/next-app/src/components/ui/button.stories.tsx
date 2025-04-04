@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
+import { Upload } from 'lucide-react';
+
 import { Button } from './button';
 
 const meta: Meta<typeof Button> = {
@@ -15,12 +17,12 @@ const meta: Meta<typeof Button> = {
 		variant: {
 			control: 'select',
 			description: 'The variant of the button',
-			options: ['default', 'outline', 'destructive', 'secondary', 'ghost'],
+			options: ['primary', 'secondary', 'outline', 'ghost'],
 		},
 		size: {
 			control: 'select',
 			description: 'The size of the button',
-			options: ['sm', 'default', 'lg', 'icon'],
+			options: ['default', 'lg', 'icon'],
 		},
 		disabled: {
 			control: 'boolean',
@@ -43,10 +45,30 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		variant: 'default',
+		variant: 'primary',
 		size: 'default',
 		disabled: false,
 		onClick: fn(),
-		children: 'Default Button',
+		children: 'Upload',
+	},
+};
+
+export const Secondary: Story = {
+	args: {
+		variant: 'secondary',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Upload',
+	},
+};
+
+export const IconButton: Story = {
+	args: {
+		variant: 'primary',
+		size: 'icon',
+		disabled: false,
+		onClick: fn(),
+		children: <Upload />,
 	},
 };
