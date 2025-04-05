@@ -17,7 +17,7 @@ const meta: Meta<typeof Button> = {
 		variant: {
 			control: 'select',
 			description: 'The variant of the button',
-			options: ['primary', 'secondary', 'outline', 'ghost'],
+			options: ['primary', 'secondary', 'error', 'success', 'outline', 'ghost'],
 		},
 		size: {
 			control: 'select',
@@ -43,7 +43,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const DefaultButton: Story = {
 	args: {
 		variant: 'primary',
 		size: 'default',
@@ -53,10 +53,70 @@ export const Default: Story = {
 	},
 };
 
-export const Secondary: Story = {
+export const SecondaryButton: Story = {
 	args: {
 		variant: 'secondary',
 		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Upload',
+	},
+};
+
+export const ErrorButton: Story = {
+	args: {
+		variant: 'error',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Delete',
+	},
+};
+
+export const SuccessButton: Story = {
+	args: {
+		variant: 'success',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Save',
+	},
+};
+
+export const OutlineButton: Story = {
+	args: {
+		variant: 'outline',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Upload',
+	},
+};
+
+export const GhostButton: Story = {
+	args: {
+		variant: 'ghost',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: 'Upload',
+	},
+};
+
+export const DisabledButton: Story = {
+	args: {
+		variant: 'primary',
+		size: 'default',
+		disabled: true,
+		onClick: fn(),
+		children: 'Disabled',
+	},
+};
+
+export const LargeButton: Story = {
+	args: {
+		variant: 'primary',
+		size: 'lg',
 		disabled: false,
 		onClick: fn(),
 		children: 'Upload',

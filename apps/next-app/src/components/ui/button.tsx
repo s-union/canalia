@@ -12,6 +12,8 @@ const buttonVariants = cva(
 			variant: {
 				primary: 'bg-primary text-white shadow-xs hover:bg-primary/80',
 				secondary: 'bg-secondary text-white shadow-xs hover:bg-secondary/80',
+				error: 'bg-error text-white shadow-xs hover:bg-error/80',
+				success: 'bg-success text-white shadow-xs hover:bg-success/80',
 				outline:
 					'border bg-background-primary shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
 				ghost:
