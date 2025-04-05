@@ -123,6 +123,20 @@ export const LargeButton: Story = {
 	},
 };
 
+export const WithIconButton: Story = {
+	args: {
+		variant: 'primary',
+		size: 'default',
+		disabled: false,
+		onClick: fn(),
+		children: (
+			<>
+				<Upload /> Upload
+			</>
+		),
+	},
+};
+
 export const IconButton: Story = {
 	args: {
 		variant: 'primary',

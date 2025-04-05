@@ -20,8 +20,8 @@ const buttonVariants = cva(
 					'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
 			},
 			size: {
-				default: 'h-9 rounded-2xl px-4 py-2 has-[>svg]:px-3',
-				lg: 'h-12 rounded-2xl px-8 text-xl has-[>svg]:px-4',
+				default: 'h-9 rounded-xl px-4 py-2 has-[>svg]:px-3',
+				lg: 'h-12 rounded-xl px-6 py-3 text-xl has-[>svg]:px-4',
 				icon: "size-12 rounded-full [&_svg:not([class*='size-'])]:size-8",
 			},
 		},
