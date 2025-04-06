@@ -49,6 +49,8 @@
   --color-warning: #fbbf24;
   --color-warning-bg: #ffe8be;
 
+  --shadow-card: 0 4px 4px 0 rgba(0, 0, 0, 0.1);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
