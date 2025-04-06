@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Ellipsis, X } from 'lucide-react';
+
 import { Button } from './button';
 import {
 	Card,
@@ -32,7 +34,7 @@ export const DefaultCard: Story = {
 				<CardDescription>カードの説明文がここに入ります。</CardDescription>
 				<CardAction>
 					<Button variant="ghost" size="icon-sm">
-						⋯
+						<Ellipsis />
 					</Button>
 				</CardAction>
 			</CardHeader>
@@ -69,7 +71,7 @@ export const WithActionCard: Story = {
 				<CardDescription>新しいメッセージが2件あります</CardDescription>
 				<CardAction>
 					<Button variant="ghost" size="icon-sm">
-						✕
+						<X />
 					</Button>
 				</CardAction>
 			</CardHeader>
