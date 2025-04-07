@@ -22,7 +22,7 @@ const meta: Meta<typeof Button> = {
 		size: {
 			control: 'select',
 			description: 'The size of the button',
-			options: ['default', 'lg', 'icon'],
+			options: ['default', 'lg', 'icon', 'icon-sm'],
 		},
 		disabled: {
 			control: 'boolean',
@@ -141,6 +141,16 @@ export const IconButton: Story = {
 	args: {
 		variant: 'primary',
 		size: 'icon',
+		disabled: false,
+		onClick: fn(),
+		children: <Upload />,
+	},
+};
+
+export const SmallIconButton: Story = {
+	args: {
+		variant: 'primary',
+		size: 'icon-sm',
 		disabled: false,
 		onClick: fn(),
 		children: <Upload />,
