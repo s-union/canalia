@@ -30,14 +30,14 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultTextarea: Story = {
 	args: {
-		placeholder: 'メッセージを入力してください',
+		placeholder: 'textarea',
 		className: 'w-96',
 	},
 };
 
 export const DisabledTextarea: Story = {
 	args: {
-		placeholder: 'メッセージを入力してください',
+		placeholder: 'textarea',
 		className: 'w-96',
 		disabled: true,
 	},
