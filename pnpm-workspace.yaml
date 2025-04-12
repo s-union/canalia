@@ -1,7 +1,10 @@
 packages:
   - apps/*
   - packages/*
+
 catalog:
   typescript: ^5
+
 onlyBuiltDependencies:
   - lefthook
+  - sharp

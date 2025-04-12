@@ -14,7 +14,7 @@
 	"keywords": [],
 	"author": "s-union",
 	"license": "ISC",
-	"packageManager": "pnpm@10.5.2",
+	"packageManager": "pnpm@10.8.0",
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"lefthook": "^1.11.3"
