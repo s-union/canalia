@@ -17,7 +17,7 @@
 
 ```bash
 # 1. リポジトリをクローン
-git clone <repository-url>
+git clone git@github.com:s-union/canalia.git
 cd canalia
 
 # 2. 自動セットアップを実行（推奨）
