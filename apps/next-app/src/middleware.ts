@@ -16,7 +16,7 @@ app.all('/auth/*', async (c) => {
 	return await auth0.middleware(c.req.raw as NextRequest);
 });
 
-app.all('/', (_c) => {
+app.all('/', () => {
 	return NextResponse.next();
 });
 app.use('*', async (c, next) => {

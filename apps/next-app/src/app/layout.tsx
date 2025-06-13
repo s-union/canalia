@@ -3,7 +3,7 @@ import { Noto_Sans_JP } from 'next/font/google';
 
 import './globals.css';
 
-export const notoSansJP = Noto_Sans_JP({
+const notoSansJP = Noto_Sans_JP({
 	variable: '--font-noto-sans-jp',
 	display: 'swap',
 	preload: false,
