@@ -1,10 +1,17 @@
 // biome-ignore lint/correctness/noUnusedImports: <explanation>
 import React from 'react';
 
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/nextjs';
+import { Noto_Sans_JP } from 'next/font/google';
 
-import { notoSansJP } from '../src/app/layout';
 import '../src/app/globals.css';
+
+const notoSansJP = Noto_Sans_JP({
+	variable: '--font-noto-sans-jp',
+	display: 'swap',
+	preload: false,
+	weight: ['400', '700'],
+});
 
 const preview: Preview = {
 	parameters: {
@@ -17,7 +24,7 @@ const preview: Preview = {
 	},
 	decorators: [
 		(Story) => (
-			<div className={`${notoSansJP.variable}`}>
+			<div className={`${notoSansJP.variable} font-sans`}>
 				<Story />
 			</div>
 		),

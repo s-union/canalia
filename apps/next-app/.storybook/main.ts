@@ -1,4 +1,5 @@
-import type { StorybookConfig } from '@storybook/experimental-nextjs-vite';
+import { resolve } from 'node:path';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 const config: StorybookConfig = {
 	stories: [
@@ -6,15 +7,24 @@ const config: StorybookConfig = {
 		'../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
 	],
 	addons: [
-		'@storybook/addon-essentials',
 		'@storybook/addon-onboarding',
 		'@chromatic-com/storybook',
-		'@storybook/experimental-addon-test',
+		'@storybook/addon-vitest',
+		'@storybook/addon-docs',
 	],
 	framework: {
-		name: '@storybook/experimental-nextjs-vite',
+		name: '@storybook/nextjs-vite',
 		options: {},
 	},
 	staticDirs: ['../public'],
+	viteFinal: async (config) => {
+		if (config.resolve) {
+			config.resolve.alias = {
+				...config.resolve.alias,
+				'@': resolve(__dirname, '../src'),
+			};
+		}
+		return config;
+	},
 };
 export default config;
