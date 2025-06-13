@@ -2,35 +2,210 @@
 
 version: '3'
 
+vars:
+  REQUIRED_NODE_VERSION: '20'
+  REQUIRED_PNPM_VERSION: '10'
+  REQUIRED_GO_VERSION: '1.24'
+
 tasks:
+  # === Setup Tasks ===
+  setup:
+    desc: 'Complete project setup for new developers'
+    cmds:
+      - task: check-prerequisites
+      - task: install-deps
+      - task: generate-types
+      - task: validate-setup
+
+  check-prerequisites:
+    desc: 'Check if all required tools are installed'
+    cmds:
+      - |
+        echo "🔍 Checking prerequisites..."
+        # Check Node.js
+        if ! command -v node &> /dev/null; then
+          echo "❌ Node.js is not installed. Please install Node.js {{.REQUIRED_NODE_VERSION}} LTS or later."
+          exit 1
+        fi
+        NODE_VERSION=$(node -v | sed 's/v//')
+        echo "✅ Node.js: $NODE_VERSION"
+
+        # Check pnpm
+        if ! command -v pnpm &> /dev/null; then
+          echo "❌ pnpm is not installed. Please install pnpm {{.REQUIRED_PNPM_VERSION}} or later."
+          echo "   Run: npm install -g pnpm"
+          exit 1
+        fi
+        PNPM_VERSION=$(pnpm -v)
+        echo "✅ pnpm: $PNPM_VERSION"
+
+        # Check Go
+        if ! command -v go &> /dev/null; then
+          echo "❌ Go is not installed. Please install Go {{.REQUIRED_GO_VERSION}} or later."
+          exit 1
+        fi
+        GO_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+        echo "✅ Go: $GO_VERSION"
+
+        # Check Taskfile
+        if ! command -v task &> /dev/null; then
+          echo "❌ Taskfile is not installed. Please install from https://taskfile.dev/"
+          exit 1
+        fi
+        echo "✅ Taskfile: $(task --version)"
+        echo "🎉 All prerequisites are satisfied!"
+
+  install-deps:
+    desc: 'Install all project dependencies'
+    cmds:
+      - echo "📦 Installing dependencies..."
+      - task: pnpm-install
+      - task: tidy
+      - echo "✅ Dependencies installed successfully!"
+
+  generate-types:
+    desc: 'Generate TypeScript and Go types from OpenAPI schema'
+    cmds:
+      - echo "🔧 Generating types from OpenAPI schema..."
+      - task: openapi-gen
+      - echo "✅ Types generated successfully!"
+
+  validate-setup:
+    desc: 'Validate that the setup is working correctly'
+    cmds:
+      - echo "🧪 Validating setup..."
+      - task: build
+      - task: lint
+      - echo "🎉 Setup validation completed successfully!"
+
+  # === Development Tasks ===
   dev:
+    desc: 'Run both frontend and backend in development mode'
+    deps: [check-env]
     cmds:
       - task: dev:server
       - task: dev:client
+
   dev:client:
+    desc: 'Run only the Next.js frontend'
     cmds:
+      - echo "🚀 Starting frontend development server..."
       - pnpm run dev
+
   dev:server:
+    desc: 'Run only the Go API server'
     dir: ./apps/go-api
+    deps: [check-env]
     cmds:
+      - echo "🚀 Starting Go API server..."
       - go run main.go
 
+  check-env:
+    desc: 'Check if environment files are properly configured'
+    cmds:
+      - |
+        if [ ! -f "apps/go-api/.env.local" ]; then
+          echo "❌ Environment file not found. Run 'task setup-env' first."
+          exit 1
+        fi
+
+        # Check if required environment variables are set
+        if ! grep -q "AUTH0_DOMAIN=.*[^[:space:]]" apps/go-api/.env.local; then
+          echo "⚠️  AUTH0_DOMAIN is not configured in apps/go-api/.env.local"
+          echo "   Please set your Auth0 domain before running the server."
+        fi
+    silent: true
+
+  # === Build Tasks ===
+  build:
+    desc: 'Build both frontend and backend'
+    cmds:
+      - task: build:client
+      - task: build:server
+
+  build:client:
+    desc: 'Build the Next.js application'
+    cmds:
+      - echo "🏗️  Building frontend..."
+      - pnpm -C apps/next-app build
+
+  build:server:
+    desc: 'Build the Go API server'
+    dir: ./apps/go-api
+    cmds:
+      - echo "🏗️  Building Go API..."
+      - go build -o canalia main.go
+
+  # === Code Quality Tasks ===
+  lint:
+    desc: 'Run all linting and formatting checks'
+    cmds:
+      - echo "🔍 Running code quality checks..."
+      - pnpm run check
+      - pnpm run lint:next
+      - echo "✅ All checks passed!"
+
+  format:
+    desc: 'Format all code'
+    cmds:
+      - echo "✨ Formatting code..."
+      - pnpm run format
+
+  # === Testing Tasks ===
+  test:
+    desc: 'Run all tests'
+    cmds:
+      - echo "🧪 Running tests..."
+      - pnpm -C apps/next-app test
+
+  storybook:
+    desc: 'Start Storybook component development'
+    cmds:
+      - echo "📚 Starting Storybook..."
+      - pnpm -C apps/next-app storybook
+
+  # === Dependency Management ===
   pnpm-install:
+    desc: 'Install Node.js dependencies'
     cmds:
       - pnpm i
+
   tidy:
+    desc: 'Clean up Go dependencies'
     dir: ./apps/go-api
     cmds:
       - go mod tidy
 
+  # === OpenAPI Code Generation ===
   openapi-gen:
+    desc: 'Generate types from OpenAPI schema'
     cmds:
       - task: openapi-gen:client
       - task: openapi-gen:server
+
   openapi-gen:client:
+    desc: 'Generate TypeScript types for frontend'
     cmds:
       - pnpm run openapi-gen
+
   openapi-gen:server:
+    desc: 'Generate Go types for backend'
     dir: ./apps/go-api
     cmds:
       - go tool oapi-codegen -config oapi-config.yaml ../../schema/openapi.yaml
+
+  # === Cleanup Tasks ===
+  clean:
+    desc: 'Clean all build artifacts and dependencies'
+    cmds:
+      - echo "🧹 Cleaning project..."
+      - rm -rf node_modules apps/next-app/node_modules
+      - rm -rf apps/next-app/.next apps/next-app/dist
+      - rm -f apps/go-api/canalia
+      - echo "✅ Project cleaned!"
+
+  # === Help ===
+  help:
+    desc: 'Show available tasks'
+    cmds:
+      - task --list
