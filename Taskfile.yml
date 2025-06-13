@@ -11,7 +11,7 @@ tasks:
     cmds:
       - pnpm run dev
   dev:server:
-    dir: ./go-api
+    dir: ./apps/go-api
     cmds:
       - go run main.go
 
@@ -19,7 +19,7 @@ tasks:
     cmds:
       - pnpm i
   tidy:
-    dir: ./go-api
+    dir: ./apps/go-api
     cmds:
       - go mod tidy
 
@@ -31,6 +31,6 @@ tasks:
     cmds:
       - pnpm run openapi-gen
   openapi-gen:server:
-    dir: ./go-api
+    dir: ./apps/go-api
     cmds:
-      - go tool oapi-codegen -package generated -generate types,server ../schema/openapi.yaml > generated/openapi.gen.go
+      - go tool oapi-codegen -config oapi-config.yaml ../../schema/openapi.yaml
