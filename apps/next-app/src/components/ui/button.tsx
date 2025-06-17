@@ -1,6 +1,6 @@
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
-// biome-ignore lint/style/useImportType: <explanation>
+// biome-ignore lint/style/useImportType: React is used in the decorators
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
