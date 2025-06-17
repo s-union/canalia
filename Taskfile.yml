@@ -141,15 +141,15 @@ tasks:
     desc: 'Run all linting and formatting checks'
     cmds:
       - echo "🔍 Running code quality checks..."
-      - pnpm run check
-      - pnpm run lint:next
+      - pnpm -C apps/next-app run check
+      - pnpm -C apps/next-app run lint
       - echo "✅ All checks passed!"
 
   format:
     desc: 'Format all code'
     cmds:
       - echo "✨ Formatting code..."
-      - pnpm run format
+      - pnpm -C apps/next-app run format
 
   # === Testing Tasks ===
   test:
