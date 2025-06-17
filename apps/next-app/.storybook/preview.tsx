@@ -1,4 +1,4 @@
-// biome-ignore lint/correctness/noUnusedImports: <explanation>
+// biome-ignore lint/correctness/noUnusedImports: React is used in the decorators
 import React from 'react';
 
 import type { Preview } from '@storybook/nextjs';
