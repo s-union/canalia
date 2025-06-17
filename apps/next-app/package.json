@@ -7,6 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"check": "biome check .",
+		"format": "biome format --write .",
+		"lint:biome": "biome lint .",
 		"openapi-gen": "openapi-typescript ../../schema/openapi.yaml -o ./generated/schema.d.ts",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build"
