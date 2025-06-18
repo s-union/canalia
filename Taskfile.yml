@@ -194,6 +194,107 @@ tasks:
     cmds:
       - go tool oapi-codegen -config oapi-config.yaml ../../schema/openapi.yaml
 
+  # === Docker Tasks ===
+  docker:up:
+    desc: 'Start PostgreSQL for development'
+    cmds:
+      - echo "🐳 Starting development database..."
+      - docker-compose -f docker-compose.dev.yml up -d
+      - echo "✅ Database is running at localhost:5432"
+
+  docker:down:
+    desc: 'Stop development database'
+    cmds:
+      - echo "🐳 Stopping development database..."
+      - docker-compose -f docker-compose.dev.yml down
+
+  docker:restart:
+    desc: 'Restart development database'
+    cmds:
+      - task: docker:down
+      - task: docker:up
+
+  docker:logs:
+    desc: 'Show database logs'
+    cmds:
+      - docker-compose -f docker-compose.dev.yml logs -f postgres
+
+  docker:clean:
+    desc: 'Stop and remove all development containers and volumes'
+    cmds:
+      - echo "🧹 Cleaning development database..."
+      - docker-compose -f docker-compose.dev.yml down -v --remove-orphans
+      - echo "✅ Development database cleaned!"
+
+  # === Database Tasks ===
+  db:dev:setup:
+    desc: 'Setup development database (start Docker + run migrations)'
+    cmds:
+      - task: docker:up
+      - task: db:dev:wait-ready
+      - task: db:dev:migrate:up
+
+  db:dev:wait-ready:
+    desc: 'Wait for development database to be ready'
+    cmds:
+      - |
+        echo "⏳ Waiting for database to be ready..."
+        until docker exec canalia-postgres-dev pg_isready -U canalia_user -d canalia_db; do
+          echo "  Database is not ready yet, waiting..."
+          sleep 2
+        done
+        echo "✅ Database is ready!"
+
+  db:dev:migrate:up:
+    desc: 'Run database migrations (development)'
+    dir: ./apps/go-api
+    vars:
+      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+    cmds:
+      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" up
+
+  db:dev:migrate:down:
+    desc: 'Rollback database migrations (development)'
+    dir: ./apps/go-api
+    vars:
+      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+    cmds:
+      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" down
+
+  db:migrate:create:
+    desc: 'Create a new migration file'
+    dir: ./apps/go-api
+    cmds:
+      - go tool migrate create -ext sql -dir internal/db/migrations -seq {{.CLI_ARGS}}
+
+  db:dev:migrate:force:
+    desc: 'Force database migration version (development)'
+    dir: ./apps/go-api
+    vars:
+      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+    cmds:
+      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" force {{.CLI_ARGS}}
+
+  db:dev:migrate:version:
+    desc: 'Show current migration version (development)'
+    dir: ./apps/go-api
+    vars:
+      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+    cmds:
+      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" version
+
+  db:generate:
+    desc: 'Generate Go code from SQL queries using sqlc'
+    dir: ./apps/go-api
+    cmds:
+      - go tool sqlc generate
+
+  db:dev:reset:
+    desc: 'Reset development database (down all migrations, then up)'
+    cmds:
+      - task: db:dev:migrate:down
+      - task: db:dev:migrate:up
+
   # === Cleanup Tasks ===
   clean:
     desc: 'Clean all build artifacts and dependencies'

@@ -8,7 +8,6 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     contact_email VARCHAR(255),
-    university_id VARCHAR(50) UNIQUE,
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
     phone_number VARCHAR(20),
     family_name VARCHAR(100) NOT NULL,
@@ -40,8 +39,6 @@ CREATE TABLE leaders (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     circle_id INTEGER NOT NULL REFERENCES circles(id) ON DELETE CASCADE,
     priority INTEGER NOT NULL DEFAULT 1,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     UNIQUE(user_id, circle_id)
 );
 
@@ -165,9 +162,7 @@ CREATE TABLE event_genres (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     start_application TIMESTAMP WITH TIME ZONE NOT NULL,
-    end_application TIMESTAMP WITH TIME ZONE NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    end_application TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 -- Places table
@@ -202,9 +197,7 @@ CREATE TABLE contact_emails (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(20),
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    phone_number VARCHAR(20)
 );
 
 -- QA answers table
@@ -221,7 +214,6 @@ CREATE TABLE qa_answers (
 
 -- Create indexes for better performance
 CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_university_id ON users(university_id);
 CREATE INDEX idx_leaders_user_id ON leaders(user_id);
 CREATE INDEX idx_leaders_circle_id ON leaders(circle_id);
 CREATE INDEX idx_user_permissions_user_id ON user_permissions(user_id);

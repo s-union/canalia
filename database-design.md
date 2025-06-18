@@ -36,7 +36,6 @@ erDiagram
         int id PK "ユーザー管理用テーブル"
         string email "メールアドレス（理科大メール）Unique"
         string contactEmail "連絡用メールアドレス Nullable"
-        string universityId "学籍番号 Unique Nullable"
         boolean isVerified "メール認証済み"
         string phoneNumber "電話番号"
         string familyName "姓"
@@ -66,8 +65,6 @@ erDiagram
         int userId FK
         int circleId FK
         int priority "代表優先度（1:主代表, 2~:副代表）"
-        timestamp createdAt
-        timestamp updatedAt
     }
 
     permissions {
@@ -184,8 +181,6 @@ erDiagram
         string name "種別名"
         timestamp startApplication "申請開始"
         timestamp endApplication "申請終了"
-        timestamp createdAt
-        timestamp updatedAt
     }
 
     eventTags {
@@ -206,8 +201,6 @@ erDiagram
         string name "名称"
         string email "メールアドレス"
         string phoneNumber "電話番号"
-        timestamp createdAt
-        timestamp updatedAt
     }
 
     qaAnswers {
