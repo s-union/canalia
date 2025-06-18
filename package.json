@@ -5,7 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "pnpm -C apps/next-app dev",
-		"openapi-gen": "pnpm -C apps/next-app openapi-gen"
+		"typespec-compile": "tsp compile schema/main.tsp",
+		"openapi-gen": "pnpm run typespec-compile && pnpm -C apps/next-app openapi-gen"
 	},
 	"keywords": [],
 	"author": "s-union",
@@ -13,6 +14,10 @@
 	"packageManager": "pnpm@10.12.1",
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.0",
+		"@typespec/compiler": "^1.1.0",
+		"@typespec/http": "^1.1.0",
+		"@typespec/openapi3": "^1.1.0",
+		"@typespec/rest": "^0.71.0",
 		"lefthook": "^1.11.13"
 	}
 }

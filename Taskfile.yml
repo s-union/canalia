@@ -180,8 +180,15 @@ tasks:
   openapi-gen:
     desc: 'Generate types from OpenAPI schema'
     cmds:
+      - task: typespec-compile
       - task: openapi-gen:client
       - task: openapi-gen:server
+
+  typespec-compile:
+    desc: 'Compile TypeSpec to OpenAPI schema'
+    cmds:
+      - echo "🔧 Compiling TypeSpec to OpenAPI..."
+      - pnpm run typespec-compile
 
   openapi-gen:client:
     desc: 'Generate TypeScript types for frontend'

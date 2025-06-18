@@ -11,11 +11,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * ユーザー情報を取得する
-         * @description ユーザー情報を取得する
-         */
-        get: operations["getUser"];
+        /** ユーザー情報を取得する */
+        get: operations["Routes_getUser"];
         put?: never;
         post?: never;
         delete?: never;
@@ -30,9 +27,9 @@ export interface components {
     schemas: {
         User: {
             /** @description ユーザー名 */
-            name?: string;
+            name: string;
             /** @description メールアドレス */
-            email?: string;
+            email: string;
         };
     };
     responses: never;
@@ -43,7 +40,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getUser: {
+    Routes_getUser: {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +49,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
+            /** @description The request has succeeded. */
             200: {
                 headers: {
                     [name: string]: unknown;

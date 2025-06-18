@@ -93,12 +93,23 @@ task tidy             # Clean dependencies
 
 ## OpenAPI Workflow
 
-1. Edit `schema/openapi.yaml` to define API changes
-2. Run `task openapi-gen` to update generated types:
-   - Frontend: `apps/next-app/generated/schema.d.ts`
-   - Backend: `apps/go-api/internal/types/openapi.gen.go`
+1. Edit `schema/main.tsp` to define API changes using TypeSpec
+2. Run `task openapi-gen` to:
+   - Compile TypeSpec to OpenAPI: `schema/openapi.yaml`
+   - Generate frontend types: `apps/next-app/generated/schema.d.ts`
+   - Generate backend types: `apps/go-api/internal/types/openapi.gen.go`
 3. Update handlers in `apps/go-api/internal/api/` to use new types
 4. Add routes manually in `api.RegisterRoutes()`
+
+### TypeSpec Commands
+
+```bash
+# Compile TypeSpec to OpenAPI only
+pnpm run typespec-compile
+
+# Full generation pipeline (TypeSpec → OpenAPI → client/server types)
+task openapi-gen
+```
 
 ## Environment Setup
 

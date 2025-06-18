@@ -1,0 +1,7 @@
+emit:
+  - "@typespec/openapi3"
+options:
+  "@typespec/openapi3":
+    file-type: yaml
+    output-file: openapi.yaml
+output-dir: "{project-root}/schema"
