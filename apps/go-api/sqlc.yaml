@@ -1,0 +1,43 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "internal/db/queries"
+    schema: "internal/db/migrations"
+    gen:
+      go:
+        package: "db"
+        out: "internal/db/generated"
+        emit_json_tags: true
+        emit_prepared_queries: false
+        emit_interface: true
+        emit_exact_table_names: true
+        emit_empty_slices: true
+        emit_exported_queries: true
+        emit_result_struct_pointers: true
+        emit_params_struct_pointers: true
+        emit_methods_with_db_argument: false
+        emit_pointers_for_null_types: true
+        emit_enum_valid_method: true
+        emit_all_enum_values: true
+        json_tags_case_style: "snake"
+        overrides:
+          - column: "*.created_at"
+            go_type: "time.Time"
+          - column: "*.updated_at"
+            go_type: "time.Time"
+          - column: "*.submitted_at"
+            go_type:
+              type: "*time.Time"
+              pointer: true
+          - column: "*.start_time"
+            go_type: "time.Time"
+          - column: "*.end_time"
+            go_type: "time.Time"
+          - column: "*.committee_start_time"
+            go_type: "time.Time"
+          - column: "*.committee_end_time"
+            go_type: "time.Time"
+          - column: "*.start_application"
+            go_type: "time.Time"
+          - column: "*.end_application"
+            go_type: "time.Time"
