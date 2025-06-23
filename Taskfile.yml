@@ -53,6 +53,15 @@ tasks:
           exit 1
         fi
         echo "✅ Taskfile: $(task --version)"
+
+        # Check Docker
+        if ! command -v docker &> /dev/null; then
+          echo "❌ Docker is not installed. Please install from https://docs.docker.com/get-docker/"
+          exit 1
+        fi
+        DOCKER_VERSION=$(docker --version | awk '{print $3}' | sed 's/,//')
+        echo "✅ Docker: $DOCKER_VERSION"
+
         echo "🎉 All prerequisites are satisfied!"
 
   install-deps:
@@ -80,11 +89,9 @@ tasks:
 
   # === Development Tasks ===
   dev:
-    desc: 'Run both frontend and backend in development mode'
-    deps: [check-env]
+    desc: 'Run full development environment with Docker (with hot reload)'
     cmds:
-      - task: dev:server
-      - task: dev:client
+      - task: docker:dev
 
   dev:client:
     desc: 'Run only the Next.js frontend'
@@ -95,26 +102,9 @@ tasks:
   dev:server:
     desc: 'Run only the Go API server'
     dir: ./apps/go-api
-    deps: [check-env]
     cmds:
       - echo "🚀 Starting Go API server..."
       - go run main.go
-
-  check-env:
-    desc: 'Check if environment files are properly configured'
-    cmds:
-      - |
-        if [ ! -f "apps/go-api/.env.local" ]; then
-          echo "❌ Environment file not found. Run 'task setup-env' first."
-          exit 1
-        fi
-
-        # Check if required environment variables are set
-        if ! grep -q "AUTH0_DOMAIN=.*[^[:space:]]" apps/go-api/.env.local; then
-          echo "⚠️  AUTH0_DOMAIN is not configured in apps/go-api/.env.local"
-          echo "   Please set your Auth0 domain before running the server."
-        fi
-    silent: true
 
   # === Build Tasks ===
   build:
@@ -199,7 +189,7 @@ tasks:
     desc: 'Start PostgreSQL for development'
     cmds:
       - echo "🐳 Starting development database..."
-      - docker-compose -f docker-compose.dev.yml up -d
+      - docker-compose -f docker-compose.dev.yml up -d postgres
       - echo "✅ Database is running at localhost:5432"
 
   docker:down:
@@ -222,9 +212,31 @@ tasks:
   docker:clean:
     desc: 'Stop and remove all development containers and volumes'
     cmds:
-      - echo "🧹 Cleaning development database..."
+      - echo "🧹 Cleaning development environment..."
       - docker-compose -f docker-compose.dev.yml down -v --remove-orphans
-      - echo "✅ Development database cleaned!"
+      - echo "✅ Development environment cleaned!"
+
+  docker:dev:
+    desc: 'Start full development environment (PostgreSQL + Go API + Next.js)'
+    cmds:
+      - echo "🚀 Starting full development environment..."
+      - docker-compose -f docker-compose.dev.yml up -d
+      - echo "✅ Development environment is running:"
+      - echo "   PostgreSQL at localhost:5432"
+      - echo "   Go API at localhost:8080"
+      - echo "   Next.js at localhost:3000"
+
+  docker:dev:logs:
+    desc: 'Show logs for all development services'
+    cmds:
+      - docker-compose -f docker-compose.dev.yml logs -f
+
+  docker:dev:build:
+    desc: 'Rebuild development containers'
+    cmds:
+      - echo "🔨 Rebuilding development containers..."
+      - docker-compose -f docker-compose.dev.yml build --no-cache
+      - echo "✅ Containers rebuilt!"
 
   # === Database Tasks ===
   db:dev:setup:
@@ -249,17 +261,17 @@ tasks:
     desc: 'Run database migrations (development)'
     dir: ./apps/go-api
     vars:
-      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+      DEV_DATABASE_URL: 'postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable'
     cmds:
-      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" up
+      - go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" up
 
   db:dev:migrate:down:
     desc: 'Rollback database migrations (development)'
     dir: ./apps/go-api
     vars:
-      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+      DEV_DATABASE_URL: 'postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable'
     cmds:
-      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" down
+      - go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" down
 
   db:migrate:create:
     desc: 'Create a new migration file'
@@ -271,17 +283,17 @@ tasks:
     desc: 'Force database migration version (development)'
     dir: ./apps/go-api
     vars:
-      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+      DEV_DATABASE_URL: 'postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable'
     cmds:
-      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" force {{.CLI_ARGS}}
+      - go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" force {{.CLI_ARGS}}
 
   db:dev:migrate:version:
     desc: 'Show current migration version (development)'
     dir: ./apps/go-api
     vars:
-      DEV_DATABASE_URL: "postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable"
+      DEV_DATABASE_URL: 'postgres://canalia_user:canalia_password@localhost:5432/canalia_db?sslmode=disable'
     cmds:
-      - go tool migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" version
+      - go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path internal/db/migrations -database "{{.DEV_DATABASE_URL}}" version
 
   db:generate:
     desc: 'Generate Go code from SQL queries using sqlc'
@@ -294,6 +306,34 @@ tasks:
     cmds:
       - task: db:dev:migrate:down
       - task: db:dev:migrate:up
+
+  db:dev:clean:
+    desc: 'Clean all data from development database tables'
+    cmds:
+      - |
+        echo "🧹 Cleaning development database..."
+        docker exec canalia-postgres-dev psql -U canalia_user -d canalia_db -c "
+        DO \$\$
+        DECLARE
+          table_names TEXT;
+        BEGIN
+          SELECT string_agg(table_name, ', ')
+          INTO table_names
+          FROM information_schema.tables
+          WHERE table_schema = 'public'
+            AND table_type = 'BASE TABLE'
+            AND table_name != 'schema_migrations';
+          
+          IF table_names IS NOT NULL THEN
+            EXECUTE 'TRUNCATE TABLE ' || table_names || ' RESTART IDENTITY CASCADE';
+            RAISE NOTICE 'Truncated tables: %', table_names;
+          ELSE
+            RAISE NOTICE 'No tables found to truncate';
+          END IF;
+        END;
+        \$\$;
+        "
+        echo "✅ Database cleaned successfully!"
 
   # === Cleanup Tasks ===
   clean:

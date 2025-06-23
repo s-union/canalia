@@ -45,6 +45,14 @@ Uses standard Go project layout with manual route control:
 
 ## Development Commands
 
+### Prerequisites
+- **Docker**: Required for PostgreSQL development database
+- **Docker Compose**: Required for database container orchestration
+- Node.js 20+ LTS
+- pnpm 10+
+- Go 1.24+
+- Task (Taskfile)
+
 ### Setup
 ```bash
 # Complete automated setup (recommended)
@@ -57,6 +65,8 @@ task openapi-gen
 ```
 
 ### Database Development
+**Requires Docker and Docker Compose**
+
 ```bash
 # Setup development database (Docker + migrations)
 task db:dev:setup
@@ -67,6 +77,7 @@ task db:dev:migrate:down    # Rollback migrations
 task db:migrate:create      # Create new migration
 task db:generate            # Generate Go code from SQL
 task db:dev:reset           # Reset database
+task db:dev:clean           # Clear all data from tables
 
 # Docker operations
 task docker:up              # Start PostgreSQL
@@ -129,11 +140,14 @@ go tool sqlc -h       # Code generation commands
 ## Database Workflow
 
 ### Development Database
+**Prerequisites: Docker and Docker Compose must be installed**
+
 Uses Docker Compose with PostgreSQL 16 for development:
-1. `task db:dev:setup` - Start database and run migrations
+1. `task db:dev:setup` - Start Docker database and run migrations
 2. Add SQL queries to `internal/db/queries/` 
 3. `task db:generate` - Generate Go code with sqlc
 4. Use generated types in handlers
+5. `task db:dev:clean` - Clear test data when needed
 
 ### Migration Management
 1. `task db:migrate:create <name>` - Create new migration files

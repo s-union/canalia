@@ -12,6 +12,7 @@
 - **pnpm** v10以降 (`npm install -g pnpm`)
 - **Go** v1.24以降 ([ダウンロード](https://golang.org/dl/))
 - **Taskfile** ([インストール手順](https://taskfile.dev/installation/))
+- **Docker** ([インストール手順](https://docs.docker.com/get-docker/))
 
 ### セットアップ
 
@@ -40,12 +41,11 @@ task setup
 ### 開発サーバーの起動
 
 ```bash
-# フロントエンドとバックエンドを同時起動
-task dev
+# ローカル開発（従来の方法）
+task dev                # フロントエンドとバックエンドを同時起動
+task dev:client         # Next.js フロントエンド
+task dev:server         # Go API サーバー
 
-# 個別起動
-task dev:client    # Next.js フロントエンド
-task dev:server    # Go API サーバー
 ```
 
 ### その他の開発タスク
@@ -65,6 +65,30 @@ task test
 
 # ビルド
 task build
+```
+
+### データベース開発
+
+**Docker が必要です。** PostgreSQL 16をDocker Composeで管理します。
+
+```bash
+# データベース環境のセットアップ（初回のみ）
+task db:dev:setup
+
+# データベース操作
+task db:dev:migrate:up     # マイグレーション実行
+task db:dev:migrate:down   # マイグレーション巻き戻し
+task db:migrate:create     # 新しいマイグレーション作成
+task db:generate          # SQLからGoコード生成
+task db:dev:clean         # テストデータをクリア
+
+# Docker操作
+task docker:up            # PostgreSQL起動
+task docker:down          # データベース停止
+task docker:clean         # コンテナとボリューム削除
+task docker:dev           # フルスタック開発環境起動
+task docker:dev:logs      # 全サービスのログ表示
+task docker:dev:build     # 開発コンテナのリビルド
 ```
 
 ## ⚙️ 環境設定
@@ -144,10 +168,14 @@ task storybook
 - **Go** - API サーバー
 - **Echo** - Web フレームワーク
 - **Auth0** - 認証
+- **PostgreSQL 16** - データベース（Docker）
+- **sqlc** - 型安全なSQLコード生成
+- **golang-migrate** - データベースマイグレーション
 - **oapi-codegen** - OpenAPI型生成
 
 ### 開発ツール
 - **Taskfile** - タスクランナー
+- **Docker & Docker Compose** - コンテナ管理
 - **Biome** - リンター・フォーマッター
 - **pnpm** - パッケージマネージャー
 - **Lefthook** - Git フック
@@ -181,4 +209,19 @@ task check-env
 # 依存関係を再インストール
 task clean
 task install-deps
+```
+
+### データベース接続でエラーが発生した場合
+
+```bash
+# Dockerが起動しているか確認
+docker ps
+
+# データベースを再起動
+task docker:down
+task docker:up
+
+# データベースのクリーンアップと再セットアップ
+task docker:clean
+task db:dev:setup
 ```

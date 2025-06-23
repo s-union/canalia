@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -23,9 +21,67 @@ services:
     networks:
       - canalia-dev
 
+  go-api:
+    build:
+      context: .
+      dockerfile: apps/go-api/Dockerfile.dev
+    container_name: canalia-go-api-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./apps/go-api:/app
+      - go_modules:/go/pkg/mod
+    environment:
+      - GO_ENV=development
+      - DATABASE_URL=postgres://canalia_user:canalia_password@postgres:5432/canalia_db?sslmode=disable
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - canalia-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/go-api
+          target: /app
+        - action: rebuild
+          path: ./apps/go-api/go.mod
+
+  next-app:
+    build:
+      context: .
+      dockerfile: apps/next-app/Dockerfile.dev
+    container_name: canalia-next-app-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+      - /workspace/apps/next-app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+    depends_on:
+      - go-api
+    networks:
+      - canalia-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/next-app/src
+          target: /workspace/apps/next-app/src
+        - action: rebuild
+          path: ./apps/next-app/package.json
+
 
 volumes:
   postgres_data:
+    driver: local
+  go_modules:
     driver: local
 
 networks:
