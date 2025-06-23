@@ -33,7 +33,7 @@ services:
       - ./apps/go-api:/app
       - go_modules:/go/pkg/mod
     environment:
-      - GO_ENV=development
+      - GO_ENV=local
       - DATABASE_URL=postgres://canalia_user:canalia_password@postgres:5432/canalia_db?sslmode=disable
       - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
       - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
