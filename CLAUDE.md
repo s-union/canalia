@@ -23,6 +23,7 @@ schema/
 ### Go API Architecture (apps/go-api)
 Uses standard Go project layout with manual route control:
 - `internal/api/`: HTTP handlers and route registration
+- `internal/db/`: Database layer with sqlc-generated code and migrations
 - `internal/middleware/`: Auth0 JWT middleware 
 - `internal/types/`: Generated OpenAPI types (models only)
 - `internal/utils/`: Auth0 user info utilities
@@ -31,6 +32,8 @@ Uses standard Go project layout with manual route control:
 - oapi-codegen generates **types only** (not server handlers)
 - Manual route registration in `api.RegisterRoutes()` for better control
 - Auth0 JWT authentication for all routes
+- sqlc + golang-migrate for type-safe database operations
+- Go 1.24 tool directives for dependency management
 - Environment-specific `.env` files (`.env.local`, `.env.development`, etc.)
 
 ### Frontend Architecture (apps/next-app)
@@ -42,14 +45,44 @@ Uses standard Go project layout with manual route control:
 
 ## Development Commands
 
+### Prerequisites
+- **Docker**: Required for PostgreSQL development database
+- **Docker Compose**: Required for database container orchestration
+- Node.js 20+ LTS
+- pnpm 10+
+- Go 1.24+
+- Task (Taskfile)
+
 ### Setup
 ```bash
-# Install dependencies
+# Complete automated setup (recommended)
+task setup
+
+# Manual setup
 task pnpm-install
 task tidy
-
-# Generate types from OpenAPI schema
 task openapi-gen
+```
+
+### Database Development
+**Requires Docker and Docker Compose**
+
+```bash
+# Setup development database (Docker + migrations)
+task db:dev:setup
+
+# Database operations
+task db:dev:migrate:up      # Run migrations
+task db:dev:migrate:down    # Rollback migrations
+task db:migrate:create      # Create new migration
+task db:generate            # Generate Go code from SQL
+task db:dev:reset           # Reset database
+task db:dev:clean           # Clear all data from tables
+
+# Docker operations
+task docker:up              # Start PostgreSQL
+task docker:down            # Stop database
+task docker:clean           # Remove containers and volumes
 ```
 
 ### Development
@@ -89,6 +122,10 @@ pnpm storybook        # Component development
 go run main.go        # Run server
 go build              # Build binary
 task tidy             # Clean dependencies
+
+# Database tools (Go 1.24 tool directives)
+go tool migrate -h    # Migration commands
+go tool sqlc -h       # Code generation commands
 ```
 
 ## OpenAPI Workflow
@@ -100,6 +137,30 @@ task tidy             # Clean dependencies
 3. Update handlers in `apps/go-api/internal/api/` to use new types
 4. Add routes manually in `api.RegisterRoutes()`
 
+## Database Workflow
+
+### Development Database
+**Prerequisites: Docker and Docker Compose must be installed**
+
+Uses Docker Compose with PostgreSQL 16 for development:
+1. `task db:dev:setup` - Start Docker database and run migrations
+2. Add SQL queries to `internal/db/queries/` 
+3. `task db:generate` - Generate Go code with sqlc
+4. Use generated types in handlers
+5. `task db:dev:clean` - Clear test data when needed
+
+### Migration Management
+1. `task db:migrate:create <name>` - Create new migration files
+2. Edit `.up.sql` and `.down.sql` files in `internal/db/migrations/`
+3. `task db:dev:migrate:up` - Apply migrations
+4. Use `task db:dev:migrate:down` to rollback if needed
+
+**Database Design:**
+- Based on `database-design.md` with ER diagram
+- Uses PostgreSQL enums for type safety
+- Excludes unnecessary timestamps on static/intermediate tables
+- Auth0 email-based user identification (no university_id)
+
 ## Environment Setup
 
 Create environment files based on `.env.example`:
@@ -109,4 +170,5 @@ Create environment files based on `.env.example`:
 Required environment variables for Go API:
 - `AUTH0_DOMAIN`: Auth0 tenant domain
 - `AUTH0_AUDIENCE`: Auth0 API identifier
+- `DATABASE_URL`: PostgreSQL connection string
 - `GO_ENV`: Environment name (defaults to "local")
