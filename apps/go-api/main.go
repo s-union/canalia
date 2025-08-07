@@ -10,6 +10,7 @@ import (
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/s-union/canalia/internal/api"
+	"github.com/s-union/canalia/internal/db"
 	"github.com/s-union/canalia/internal/middleware"
 )
 
@@ -26,7 +27,15 @@ func Env() {
 
 func main() {
 	Env()
-	server := api.NewServer()
+
+	// Initialize database connection
+	database, err := db.NewDB()
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer database.Close()
+
+	server := api.NewServer(database)
 
 	e := echo.New()
 	e.Use(echoMiddleware.Recover())

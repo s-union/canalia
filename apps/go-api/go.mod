@@ -170,6 +170,7 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/neo4j/neo4j-go-driver v1.8.3 // indirect
 	github.com/oapi-codegen/oapi-codegen/v2 v2.4.1 // indirect
+	github.com/oapi-codegen/runtime v1.1.2 // indirect
 	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect
 	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
@@ -197,6 +198,7 @@ require (
 	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.5.0 // indirect
+	github.com/sqlc-dev/pqtype v0.3.0 // indirect
 	github.com/sqlc-dev/sqlc v1.29.0 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect

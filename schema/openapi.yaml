@@ -20,17 +20,180 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '404':
+          description: ユーザーが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: ユーザー登録
+      description: 新しいユーザーを登録する
+      operationId: createUser
+      security:
+        - Role:
+            - normal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: ユーザー登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 無効なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: ユーザーが既に存在します
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: ユーザー情報更新
+      description: ユーザー情報を更新する
+      operationId: updateUser
+      security:
+        - Role:
+            - normal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: ユーザー情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 無効なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: ユーザーが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     User:
       type: object
       properties:
-        name:
-          type: string
-          description: ユーザー名
+        id:
+          type: integer
+          description: ユーザーID
         email:
           type: string
-          description: メールアドレス
+          format: email
+          description: メールアドレス（理科大メール）
+        contactEmail:
+          type: string
+          format: email
+          nullable: true
+          description: 連絡用メールアドレス
+        isVerified:
+          type: boolean
+          description: メール認証済み
+        phoneNumber:
+          type: string
+          nullable: true
+          description: 電話番号
+        familyName:
+          type: string
+          description: 姓
+        givenName:
+          type: string
+          description: 名
+        isActive:
+          type: boolean
+          description: アカウント有効フラグ
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+      required:
+        - id
+        - email
+        - isVerified
+        - familyName
+        - givenName
+        - isActive
+        - createdAt
+        - updatedAt
+    CreateUserRequest:
+      type: object
+      properties:
+        contactEmail:
+          type: string
+          format: email
+          nullable: true
+          description: 連絡用メールアドレス
+        phoneNumber:
+          type: string
+          nullable: true
+          description: 電話番号
+        familyName:
+          type: string
+          description: 姓
+        givenName:
+          type: string
+          description: 名
+      required:
+        - familyName
+        - givenName
+    UpdateUserRequest:
+      type: object
+      properties:
+        contactEmail:
+          type: string
+          format: email
+          nullable: true
+          description: 連絡用メールアドレス
+        phoneNumber:
+          type: string
+          nullable: true
+          description: 電話番号
+        familyName:
+          type: string
+          description: 姓
+        givenName:
+          type: string
+          description: 名
+      required:
+        - familyName
+        - givenName
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: エラーコード
+        message:
+          type: string
+          description: エラーメッセージ
+      required:
+        - code
+        - message
   securitySchemes:
     Role:
       type: http
