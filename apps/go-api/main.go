@@ -40,7 +40,7 @@ func main() {
 	e := echo.New()
 	e.Use(echoMiddleware.Recover())
 	e.Use(middleware.JWTAuth)
-	
+
 	// Manual route registration
 	api.RegisterRoutes(e, server)
 
