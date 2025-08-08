@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-	"strings"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 
 	"github.com/s-union/canalia/internal/middleware"
@@ -15,24 +15,93 @@ import (
 	"github.com/s-union/canalia/internal/utils/auth0"
 )
 
-// validateCreateUserRequest validates the CreateUserRequest
+// CreateUserValidationRequest represents the validation structure for creating a user
+type CreateUserValidationRequest struct {
+	ContactEmail *string `json:"contactEmail" validate:"omitempty,email"`
+	FamilyName   string  `json:"familyName" validate:"required,min=1"`
+	GivenName    string  `json:"givenName" validate:"required,min=1"`
+	PhoneNumber  *string `json:"phoneNumber"`
+}
+
+// UpdateUserValidationRequest represents the validation structure for updating a user
+type UpdateUserValidationRequest struct {
+	ContactEmail *string `json:"contactEmail" validate:"omitempty,email"`
+	FamilyName   string  `json:"familyName" validate:"required,min=1"`
+	GivenName    string  `json:"givenName" validate:"required,min=1"`
+	PhoneNumber  *string `json:"phoneNumber"`
+}
+
+// validator instance
+var validate = validator.New()
+
+// validateCreateUserRequest validates the CreateUserRequest using go-playground/validator
 func validateCreateUserRequest(req *types.CreateUserRequest) error {
-	if strings.TrimSpace(req.FamilyName) == "" {
-		return errors.New("familyName is required")
+	// Convert to validation struct
+	validationReq := CreateUserValidationRequest{
+		FamilyName:  req.FamilyName,
+		GivenName:   req.GivenName,
+		PhoneNumber: req.PhoneNumber,
 	}
-	if strings.TrimSpace(req.GivenName) == "" {
-		return errors.New("givenName is required")
+	
+	// Convert email pointer if provided
+	if req.ContactEmail != nil {
+		emailStr := string(*req.ContactEmail)
+		validationReq.ContactEmail = &emailStr
+	}
+	
+	if err := validate.Struct(validationReq); err != nil {
+		// Return the first validation error with a user-friendly message
+		if validationErrors, ok := err.(validator.ValidationErrors); ok {
+			for _, fieldError := range validationErrors {
+				switch fieldError.Tag() {
+				case "required":
+					return errors.New(fieldError.Field() + " is required")
+				case "min":
+					return errors.New(fieldError.Field() + " cannot be empty")
+				case "email":
+					return errors.New(fieldError.Field() + " must be a valid email address")
+				default:
+					return errors.New(fieldError.Field() + " is invalid")
+				}
+			}
+		}
+		return err
 	}
 	return nil
 }
 
-// validateUpdateUserRequest validates the UpdateUserRequest
+// validateUpdateUserRequest validates the UpdateUserRequest using go-playground/validator
 func validateUpdateUserRequest(req *types.UpdateUserRequest) error {
-	if strings.TrimSpace(req.FamilyName) == "" {
-		return errors.New("familyName is required")
+	// Convert to validation struct
+	validationReq := UpdateUserValidationRequest{
+		FamilyName:  req.FamilyName,
+		GivenName:   req.GivenName,
+		PhoneNumber: req.PhoneNumber,
 	}
-	if strings.TrimSpace(req.GivenName) == "" {
-		return errors.New("givenName is required")
+	
+	// Convert email pointer if provided
+	if req.ContactEmail != nil {
+		emailStr := string(*req.ContactEmail)
+		validationReq.ContactEmail = &emailStr
+	}
+	
+	if err := validate.Struct(validationReq); err != nil {
+		// Return the first validation error with a user-friendly message
+		if validationErrors, ok := err.(validator.ValidationErrors); ok {
+			for _, fieldError := range validationErrors {
+				switch fieldError.Tag() {
+				case "required":
+					return errors.New(fieldError.Field() + " is required")
+				case "min":
+					return errors.New(fieldError.Field() + " cannot be empty")
+				case "email":
+					return errors.New(fieldError.Field() + " must be a valid email address")
+				default:
+					return errors.New(fieldError.Field() + " is invalid")
+				}
+			}
+		}
+		return err
 	}
 	return nil
 }

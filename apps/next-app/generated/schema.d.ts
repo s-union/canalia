@@ -16,8 +16,16 @@ export interface paths {
          * @description ユーザー情報を取得する
          */
         get: operations["getUser"];
-        put?: never;
-        post?: never;
+        /**
+         * ユーザー情報更新
+         * @description ユーザー情報を更新する
+         */
+        put: operations["updateUser"];
+        /**
+         * ユーザー登録
+         * @description 新しいユーザーを登録する
+         */
+        post: operations["createUser"];
         delete?: never;
         options?: never;
         head?: never;
@@ -29,10 +37,70 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         User: {
-            /** @description ユーザー名 */
-            name?: string;
-            /** @description メールアドレス */
-            email?: string;
+            /** @description ユーザーID */
+            id: number;
+            /**
+             * Format: email
+             * @description メールアドレス
+             */
+            email: string;
+            /**
+             * Format: email
+             * @description 連絡用メールアドレス
+             */
+            contactEmail?: string | null;
+            /** @description メール認証済み */
+            isVerified: boolean;
+            /** @description 電話番号 */
+            phoneNumber?: string | null;
+            /** @description 姓 */
+            familyName: string;
+            /** @description 名 */
+            givenName: string;
+            /** @description アカウント有効フラグ */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description 作成日時
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updatedAt: string;
+        };
+        CreateUserRequest: {
+            /**
+             * Format: email
+             * @description 連絡用メールアドレス
+             */
+            contactEmail?: string | null;
+            /** @description 電話番号 */
+            phoneNumber?: string | null;
+            /** @description 姓 */
+            familyName: string;
+            /** @description 名 */
+            givenName: string;
+        };
+        UpdateUserRequest: {
+            /**
+             * Format: email
+             * @description 連絡用メールアドレス
+             */
+            contactEmail?: string | null;
+            /** @description 電話番号 */
+            phoneNumber?: string | null;
+            /** @description 姓 */
+            familyName: string;
+            /** @description 名 */
+            givenName: string;
+        };
+        Error: {
+            /** @description エラーコード */
+            code: number;
+            /** @description エラーメッセージ */
+            message: string;
         };
     };
     responses: never;
@@ -59,6 +127,99 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description ユーザーが見つかりません */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserRequest"];
+            };
+        };
+        responses: {
+            /** @description ユーザー情報更新成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description 無効なリクエスト */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description ユーザーが見つかりません */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateUserRequest"];
+            };
+        };
+        responses: {
+            /** @description ユーザー登録成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description 無効なリクエスト */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description ユーザーが既に存在します */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };
