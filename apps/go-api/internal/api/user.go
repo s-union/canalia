@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 
@@ -13,6 +14,28 @@ import (
 	"github.com/s-union/canalia/internal/utils"
 	"github.com/s-union/canalia/internal/utils/auth0"
 )
+
+// validateCreateUserRequest validates the CreateUserRequest
+func validateCreateUserRequest(req *types.CreateUserRequest) error {
+	if strings.TrimSpace(req.FamilyName) == "" {
+		return errors.New("familyName is required")
+	}
+	if strings.TrimSpace(req.GivenName) == "" {
+		return errors.New("givenName is required")
+	}
+	return nil
+}
+
+// validateUpdateUserRequest validates the UpdateUserRequest
+func validateUpdateUserRequest(req *types.UpdateUserRequest) error {
+	if strings.TrimSpace(req.FamilyName) == "" {
+		return errors.New("familyName is required")
+	}
+	if strings.TrimSpace(req.GivenName) == "" {
+		return errors.New("givenName is required")
+	}
+	return nil
+}
 
 func (s *Server) GetUser(c echo.Context) error {
 	user, ok := c.Get(string(middleware.UserContextKey)).(*auth0.UserInfo)
@@ -56,6 +79,14 @@ func (s *Server) CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, types.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Invalid request body",
+		})
+	}
+
+	// Validate request
+	if err := validateCreateUserRequest(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, types.Error{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
 		})
 	}
 
@@ -104,6 +135,14 @@ func (s *Server) UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, types.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Invalid request body",
+		})
+	}
+
+	// Validate request
+	if err := validateUpdateUserRequest(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, types.Error{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
 		})
 	}
 
