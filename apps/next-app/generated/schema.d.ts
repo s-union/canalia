@@ -11,13 +11,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * ユーザー情報を取得する
-         * @description ユーザー情報を取得する
-         */
+        /** ユーザー情報を取得する（自分自身） */
         get: operations["getUser"];
         put?: never;
-        post?: never;
+        /**
+         * ユーザー登録（冪等）
+         * @description Auth0のメールを識別子に登録。再送は上書き/補完。
+         */
+        post: operations["postUser"];
         delete?: never;
         options?: never;
         head?: never;
@@ -29,10 +30,49 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         User: {
-            /** @description ユーザー名 */
-            name?: string;
-            /** @description メールアドレス */
+            /** @description ユーザーID */
+            id?: number;
+            /**
+             * Format: email
+             * @description Auth0から取得したメールアドレス
+             */
             email?: string;
+            /**
+             * Format: email
+             * @description 連絡先メールアドレス
+             */
+            contactEmail?: string | null;
+            /** @description メールアドレスが認証済みかどうか */
+            isVerified?: boolean;
+            /** @description 電話番号 */
+            phoneNumber?: string | null;
+            /** @description 姓 */
+            familyName?: string;
+            /** @description 名 */
+            givenName?: string;
+            /** @description ユーザーがアクティブかどうか */
+            isActive?: boolean;
+            /**
+             * Format: date-time
+             * @description 作成日時
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updatedAt?: string;
+        };
+        UserRegistrationInput: {
+            familyName: string;
+            givenName: string;
+            /** Format: email */
+            contactEmail?: string;
+            phoneNumber?: string;
+        };
+        Error: {
+            code?: number;
+            message?: string;
         };
     };
     responses: never;
@@ -60,6 +100,53 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["User"];
                 };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserRegistrationInput"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

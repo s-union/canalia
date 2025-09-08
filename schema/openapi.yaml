@@ -7,8 +7,7 @@ info:
 paths:
   /user:
     get:
-      summary: ユーザー情報を取得する
-      description: ユーザー情報を取得する
+      summary: ユーザー情報を取得する（自分自身）
       operationId: getUser
       security:
         - Role:
@@ -20,17 +19,113 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+    post:
+      summary: ユーザー登録（冪等）
+      description: Auth0のメールを識別子に登録。再送は上書き/補完。
+      operationId: postUser
+      security:
+        - Role:
+            - normal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
 components:
   schemas:
     User:
       type: object
       properties:
-        name:
-          type: string
-          description: ユーザー名
+        id:
+          type: integer
+          description: ユーザーID
         email:
           type: string
-          description: メールアドレス
+          description: Auth0から取得したメールアドレス
+          format: email
+        contactEmail:
+          type: string
+          description: 連絡先メールアドレス
+          format: email
+          nullable: true
+        isVerified:
+          type: boolean
+          description: 連絡用メールアドレスが認証済みかどうか
+        phoneNumber:
+          type: string
+          description: 電話番号
+          maxLength: 20
+          nullable: true
+        familyName:
+          type: string
+          description: 姓
+          maxLength: 100
+        givenName:
+          type: string
+          description: 名
+          maxLength: 100
+        isActive:
+          type: boolean
+          description: ユーザーがアクティブかどうか
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+    UserRegistrationInput:
+      type: object
+      required: [familyName, givenName]
+      properties:
+        familyName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=1,max=100'
+        givenName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          x-oapi-codegen-extra-tags:
+            validate: 'required,min=1,max=100'
+        contactEmail:
+          type: string
+          format: email
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,email'
+        phoneNumber:
+          type: string
+          maxLength: 20
+          x-oapi-codegen-extra-tags:
+            validate: 'omitempty,max=20'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
   securitySchemes:
     Role:
       type: http
