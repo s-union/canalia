@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: user-contract
+  version: 0.1.0
+  description: |
+    /user に関する追加契約（最終的に schema/openapi.yaml に統合）
+paths:
+  /user:
+    get:
+      summary: ユーザー情報を取得する（自分自身）
+      operationId: getUser
+      security:
+        - Role:
+            - normal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+    post:
+      summary: ユーザー登録（冪等）
+      description: Auth0のメールを識別子に登録。再送は上書き/補完。
+      operationId: postUser
+      security:
+        - Role:
+            - normal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationInput'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ユーザーID
+        email:
+          type: string
+          description: Auth0から取得したメールアドレス
+          format: email
+        contactEmail:
+          type: string
+          description: 連絡先メールアドレス
+          format: email
+          nullable: true
+        isVerified:
+          type: boolean
+          description: メールアドレスが認証済みかどうか
+        phoneNumber:
+          type: string
+          description: 電話番号
+          maxLength: 20
+          nullable: true
+        familyName:
+          type: string
+          description: 姓
+          maxLength: 100
+        givenName:
+          type: string
+          description: 名
+          maxLength: 100
+        isActive:
+          type: boolean
+          description: ユーザーがアクティブかどうか
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+    UserRegistrationInput:
+      type: object
+      required: [familyName, givenName]
+      properties:
+        familyName:
+          type: string
+          maxLength: 100
+        givenName:
+          type: string
+          maxLength: 100
+        contactEmail:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+          maxLength: 20
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    Role:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
