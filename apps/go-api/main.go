@@ -27,7 +27,7 @@ func Env() {
 	}
 }
 
-func ConnectDB() *db.Queries {
+func ConnectDB() (*db.Queries, *pgxpool.Pool) {
 	// Initialize database connection pool
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
@@ -39,7 +39,6 @@ func ConnectDB() *db.Queries {
 	if err != nil {
 		log.Fatal("Failed to create database pool:", err)
 	}
-	defer dbPool.Close()
 
 	// Test database connection
 	if err := dbPool.Ping(ctx); err != nil {
@@ -48,13 +47,15 @@ func ConnectDB() *db.Queries {
 
 	// Initialize database queries
 	queries := db.New(dbPool)
-	return queries
+	return queries, dbPool
 }
 
 func main() {
 	Env()
 
-	queries := ConnectDB()
+	queries, dbPool := ConnectDB()
+	defer dbPool.Close()
+	
 	// Initialize server with database queries
 	server := api.NewServer(queries)
 
