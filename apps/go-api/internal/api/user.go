@@ -94,11 +94,16 @@ func (s *Server) PostUser(c echo.Context) error {
 	}
 
 	// Prepare database parameters
+	var contactEmail *string
+	if req.ContactEmail != nil {
+		emailStr := string(*req.ContactEmail)
+		contactEmail = &emailStr
+	}
 	params := &db.UpsertUserByEmailParams{
 		Email:        userInfo.Email,
 		FamilyName:   req.FamilyName,
 		GivenName:    req.GivenName,
-		ContactEmail: (*string)(req.ContactEmail), // Simple cast from *Email to *string
+		ContactEmail: contactEmail,
 		PhoneNumber:  req.PhoneNumber,
 	}
 
