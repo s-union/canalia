@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/stretchr/testify/assert"
 	openapi_types "github.com/oapi-codegen/runtime/types"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/s-union/canalia/internal/types"
 )
@@ -139,7 +139,7 @@ func emailPtr(s string) *openapi_types.Email {
 	return &email
 }
 
-// Helper function to create string pointer  
+// Helper function to create string pointer
 func stringPtr(s string) *string {
 	return &s
 }

@@ -55,7 +55,7 @@ func main() {
 
 	queries, dbPool := ConnectDB()
 	defer dbPool.Close()
-	
+
 	// Initialize server with database queries
 	server := api.NewServer(queries)
 
