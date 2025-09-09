@@ -2,14 +2,14 @@ package api
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/s-union/canalia/internal/db/generated"
+	db "github.com/s-union/canalia/internal/db/generated"
 )
 
-type Server struct{
-	queries *db.Queries
+type Server struct {
+	queries db.Querier
 }
 
-func NewServer(queries *db.Queries) *Server {
+func NewServer(queries db.Querier) *Server {
 	return &Server{queries: queries}
 }
 

@@ -65,6 +65,10 @@ task test
 
 # ビルド
 task build
+
+# モックファイル生成
+task mockgen            # Go APIのテスト用モック生成
+task generate-mocks     # 全モックファイル生成
 ```
 
 ### データベース開発
