@@ -14,8 +14,7 @@ tasks:
     cmds:
       - task: check-prerequisites
       - task: install-deps
-      - task: generate-types
-      - task: generate-mocks
+      - task: generate-all
       - task: validate-setup
 
   check-prerequisites:

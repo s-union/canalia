@@ -1,6 +1,5 @@
 # Generated files
 **/generated/
-apps/go-api/internal/db/generated/
 
 # Dependencies
 node_modules/
