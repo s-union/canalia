@@ -1,3 +1,7 @@
+# Generated files
+apps/*/generated/
+apps/go-api/internal/db/generated/
+
 # Dependencies
 node_modules/
 **/node_modules/

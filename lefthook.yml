@@ -20,3 +20,8 @@ pre-commit:
       glob: '**/*.go'
       run: go fmt && go vet
       stage_fixed: true
+
+post-merge:
+  commands:
+    generate-all:
+      run: task openapi-gen && task mockgen && task db:generate
