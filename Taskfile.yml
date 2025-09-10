@@ -87,6 +87,15 @@ tasks:
       - task: mockgen
       - echo "✅ Mock files generated successfully!"
 
+  generate-all:
+    desc: 'Generate all code (OpenAPI types, database code, and mocks)'
+    cmds:
+      - echo "🔄 Generating all code..."
+      - task: openapi-gen
+      - task: db:generate
+      - task: mockgen
+      - echo "✅ All code generated successfully!"
+
   validate-setup:
     desc: 'Validate that the setup is working correctly'
     cmds:

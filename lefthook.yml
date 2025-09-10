@@ -24,4 +24,4 @@ pre-commit:
 post-merge:
   commands:
     generate-all:
-      run: task openapi-gen && task mockgen && task db:generate
+      run: task generate-all
