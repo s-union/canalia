@@ -1,5 +1,5 @@
 # Generated files
-apps/*/generated/
+**/generated/
 apps/go-api/internal/db/generated/
 
 # Dependencies
