@@ -12,7 +12,6 @@
 			"**",
 			"!**/.next",
 			"!**/node_modules",
-			"!**/eslint.config.mjs",
 			"!**/stories",
 			"!**/*.d.ts"
 		]

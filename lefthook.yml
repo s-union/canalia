@@ -9,7 +9,7 @@ pre-commit:
       exclude: '.*\.d\.ts$'
       run: pnpm biome check {staged_files} --write
       stage_fixed: true
-    eslint-check-next:
+    next-check:
       root: './apps/next-app'
       glob: '**/*.{js,ts,jsx,tsx}'
       exclude: '.*\.d\.ts$'

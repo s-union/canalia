@@ -9,7 +9,7 @@ Canalia is a monorepo for a Japanese festival web portal with Next.js frontend, 
 Install these tools in order. **NEVER SKIP any prerequisite.**
 
 1. **Node.js 20+ LTS**: Download from https://nodejs.org/dist/v20.19.4/node-v20.19.4-linux-x64.tar.xz
-2. **pnpm 10+**: `npm install -g pnpm`  
+2. **pnpm 10+**: `npm install -g pnpm`
 3. **Go 1.24+**: Download from https://golang.org/dl/go1.24.5.linux-amd64.tar.gz
 4. **Task**: Download latest from https://github.com/go-task/task/releases/latest/download/task_linux_amd64.tar.gz
 5. **Docker**: Install from https://docs.docker.com/get-docker/
@@ -19,6 +19,7 @@ Install these tools in order. **NEVER SKIP any prerequisite.**
 **IMPORTANT**: Setup takes 7-10 minutes. NEVER CANCEL during setup or builds.
 
 ### 1. Fresh Clone Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/s-union/canalia.git
@@ -49,12 +50,14 @@ cp apps/go-api/.env.example apps/go-api/.env.local
 ## Build and Development Commands
 
 **Build Times and Timeouts:**
+
 - Frontend build: 5-10 seconds
-- Backend build: 30 seconds  
+- Backend build: 30 seconds
 - Full build: 1 minute total
 - **Set timeouts to 5+ minutes for all builds to avoid cancellation**
 
 ### Essential Commands
+
 ```bash
 # Build everything (1 minute, NEVER CANCEL)
 task build
@@ -134,7 +137,7 @@ cd apps/next-app && pnpm vitest
 task storybook
 
 # Code quality (4 seconds total)
-task lint    # Biome + ESLint checks
+task lint    # Biome
 task format  # Auto-format code
 ```
 
@@ -143,6 +146,7 @@ task format  # Auto-format code
 **ALWAYS test these scenarios after making changes:**
 
 ### 1. Build Validation
+
 ```bash
 # Test full build works (NEVER CANCEL, 1 minute timeout minimum)
 task build
@@ -153,6 +157,7 @@ task build
 ```
 
 ### 2. Development Environment Validation
+
 ```bash
 # 1. Start database
 task db:dev:setup
@@ -162,7 +167,7 @@ task dev:server
 # Should show: "⇨ http server started on [::]:8080"
 
 # 3. Start frontend
-task dev:client  
+task dev:client
 # Should show: "Ready in 1649ms" and run on localhost:3000
 
 # 4. Test Storybook
@@ -171,6 +176,7 @@ task storybook
 ```
 
 ### 3. Database Validation
+
 ```bash
 # Verify database operations work
 task db:dev:setup
@@ -182,6 +188,7 @@ task db:dev:clean
 ## Troubleshooting
 
 ### Google Fonts Network Error
+
 If `task setup` fails with "Failed to fetch Noto Sans JP from Google Fonts":
 
 ```bash
@@ -197,6 +204,7 @@ task setup
 ```
 
 ### Docker Compose Issues
+
 Modern Docker uses `docker compose` not `docker-compose`. If Taskfile commands fail:
 
 ```bash
@@ -206,6 +214,7 @@ docker compose -f docker-compose.dev.yml down
 ```
 
 ### Missing Environment Variables
+
 If Go API fails to start:
 
 ```bash
@@ -225,7 +234,7 @@ apps/
 │   ├── src/           # Source code
 │   ├── .storybook/    # Storybook config
 │   └── generated/     # OpenAPI generated types
-└── go-api/            # Go API server  
+└── go-api/            # Go API server
     ├── internal/api/  # HTTP handlers
     ├── internal/db/   # Database layer (sqlc + migrations)
     └── main.go        # Server entry point
