@@ -12,7 +12,7 @@ import (
 
 	db "github.com/s-union/canalia/internal/db/generated"
 	"github.com/s-union/canalia/internal/middleware"
-	"github.com/s-union/canalia/internal/types"
+	"github.com/s-union/canalia/internal/generated"
 	"github.com/s-union/canalia/internal/utils/auth0"
 	"github.com/s-union/canalia/internal/utils/response"
 )
@@ -24,9 +24,9 @@ const (
 var validate = validator.New()
 
 // Helper function to convert DB model to API response
-func convertUserToAPIResponse(dbUser *db.Users) types.User {
+func convertUserToAPIResponse(dbUser *db.Users) generated.User {
 	email := openapi_types.Email(dbUser.Email)
-	user := types.User{
+	user := generated.User{
 		Id:         func() *int { id := int(dbUser.ID); return &id }(),
 		Email:      &email,
 		FamilyName: &dbUser.FamilyName,
@@ -85,7 +85,7 @@ func (s *Server) PostUser(c echo.Context) error {
 	}
 
 	// Parse request body using OpenAPI generated type with validation tags
-	var req types.UserRegistrationInput
+	var req generated.UserRegistrationInput
 	if err := c.Bind(&req); err != nil {
 		errResp := response.BadRequest("Invalid request format")
 		return c.JSON(http.StatusBadRequest, errResp)

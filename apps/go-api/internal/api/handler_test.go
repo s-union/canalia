@@ -15,7 +15,7 @@ import (
 	mockapi "github.com/s-union/canalia/internal/api/generated"
 	db "github.com/s-union/canalia/internal/db/generated"
 	"github.com/s-union/canalia/internal/middleware"
-	"github.com/s-union/canalia/internal/types"
+	"github.com/s-union/canalia/internal/generated"
 	"github.com/s-union/canalia/internal/utils/auth0"
 )
 
@@ -58,7 +58,7 @@ func setupTest(t *testing.T) (*mockapi.MockQuerier, *Server, *echo.Echo) {
 func assertUserResponse(t *testing.T, rec *httptest.ResponseRecorder, expectedID int, expectedEmail string) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 
-	var response types.User
+	var response generated.User
 	err := json.Unmarshal(rec.Body.Bytes(), &response)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedID, *response.Id)
@@ -96,7 +96,7 @@ func TestPostUser(t *testing.T) {
 	userInfo := createTestUserInfo()
 
 	// Mock request body
-	reqBody := types.UserRegistrationInput{
+	reqBody := generated.UserRegistrationInput{
 		FamilyName: "Test",
 		GivenName:  "User",
 	}

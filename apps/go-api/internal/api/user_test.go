@@ -8,7 +8,7 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/s-union/canalia/internal/types"
+	"github.com/s-union/canalia/internal/generated"
 )
 
 func TestUserRegistrationValidation(t *testing.T) {
@@ -16,12 +16,12 @@ func TestUserRegistrationValidation(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		req       types.UserRegistrationInput
+		req       generated.UserRegistrationInput
 		wantError bool
 	}{
 		{
 			name: "Valid request with all fields",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName:   "田中",
 				GivenName:    "太郎",
 				ContactEmail: emailPtr("tanaka@example.com"),
@@ -31,7 +31,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Valid request with required fields only",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: "田中",
 				GivenName:  "太郎",
 			},
@@ -39,21 +39,21 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Missing family name",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				GivenName: "太郎",
 			},
 			wantError: true,
 		},
 		{
 			name: "Missing given name",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: "田中",
 			},
 			wantError: true,
 		},
 		{
 			name: "Empty family name",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: "",
 				GivenName:  "太郎",
 			},
@@ -61,7 +61,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Empty given name",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: "田中",
 				GivenName:  "",
 			},
@@ -69,7 +69,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Family name too long",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: stringRepeat("あ", 101),
 				GivenName:  "太郎",
 			},
@@ -77,7 +77,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Given name too long",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName: "田中",
 				GivenName:  stringRepeat("あ", 101),
 			},
@@ -85,7 +85,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Invalid email format",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName:   "田中",
 				GivenName:    "太郎",
 				ContactEmail: emailPtr("invalid-email"),
@@ -94,7 +94,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Phone number too long",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName:  "田中",
 				GivenName:   "太郎",
 				PhoneNumber: stringPtr(stringRepeat("0", 21)),
@@ -103,7 +103,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Valid email with special characters",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName:   "田中",
 				GivenName:    "太郎",
 				ContactEmail: emailPtr("test+label@sub.domain.com"),
@@ -112,7 +112,7 @@ func TestUserRegistrationValidation(t *testing.T) {
 		},
 		{
 			name: "Valid phone number with various formats",
-			req: types.UserRegistrationInput{
+			req: generated.UserRegistrationInput{
 				FamilyName:  "田中",
 				GivenName:   "太郎",
 				PhoneNumber: stringPtr("03-1234-5678"),
