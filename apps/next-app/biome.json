@@ -1,11 +1,20 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
 	"root": false,
 	"extends": "//",
 	"linter": {
 		"domains": {
 			"next": "recommended",
 			"react": "recommended"
+		},
+		"rules": {
+			"nursery": {
+				"noNextAsyncClientComponent": "error",
+				"useReactFunctionComponents": "error"
+			},
+			"correctness": {
+				"noNestedComponentDefinitions": "error"
+			}
 		}
 	}
 }

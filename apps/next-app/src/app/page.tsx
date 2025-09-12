@@ -14,7 +14,9 @@ export default async function Home() {
 				<div>ID Token: {session.tokenSet.idToken}</div>
 				<a href="/auth/logout">Log out</a>
 				<h2>API Data</h2>
-				<div>name: {data?.name}</div>
+				<div>
+					name: {data?.familyName} {data?.givenName}
+				</div>
 				<div>email: {data?.email}</div>
 			</main>
 		);

@@ -42,7 +42,7 @@ type User struct {
 	// IsActive ユーザーがアクティブかどうか
 	IsActive *bool `json:"isActive,omitempty"`
 
-	// IsVerified メールアドレスが認証済みかどうか
+	// IsVerified 連絡用メールアドレスが認証済みかどうか
 	IsVerified *bool `json:"isVerified,omitempty"`
 
 	// PhoneNumber 電話番号
