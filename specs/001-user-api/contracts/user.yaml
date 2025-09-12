@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
-  title: canalia
+  title: user-contract
   version: 0.1.0
   description: |
-    野田地区理大祭ウェブポータル
+    /user に関する追加契約（最終的に schema/openapi.yaml に統合）
 paths:
   /user:
     get:
@@ -68,7 +68,7 @@ components:
           nullable: true
         isVerified:
           type: boolean
-          description: 連絡用メールアドレスが認証済みかどうか
+          description: メールアドレスが認証済みかどうか
         phoneNumber:
           type: string
           description: 電話番号
@@ -99,26 +99,16 @@ components:
       properties:
         familyName:
           type: string
-          minLength: 1
           maxLength: 100
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=1,max=100'
         givenName:
           type: string
-          minLength: 1
           maxLength: 100
-          x-oapi-codegen-extra-tags:
-            validate: 'required,min=1,max=100'
         contactEmail:
           type: string
           format: email
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,email'
         phoneNumber:
           type: string
           maxLength: 20
-          x-oapi-codegen-extra-tags:
-            validate: 'omitempty,max=20'
     Error:
       type: object
       properties:

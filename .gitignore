@@ -1,3 +1,6 @@
+# Generated files
+**/generated/
+
 # Dependencies
 node_modules/
 **/node_modules/
@@ -104,3 +107,6 @@ storybook-static
 # Temporary folders
 tmp/
 temp/
+
+templates/
+scripts/
